@@ -1,0 +1,81 @@
+#!/bin/sh
+
+TOM=$1
+WEB=$2
+NAME=$3
+
+function startTomcat() {
+	if [ "$TOM" == "Y" ] || [ "$TOM" == "y" ]
+	then
+	   tomcat stop
+	else 
+		echo "Ignoring tomcat state"
+	fi
+}
+
+function stopTomcat() {
+	if [ "$TOM" == "Y" ] || [ "$TOM" == "y" ]
+	then
+	   sleep 1
+	   tomcat start
+	fi	
+}
+
+if [ "$WEB" == "C" ] || [ "$WEB" == "c" ] 
+then
+	for FILE in target/*.war
+	do
+		if [ "$NAME" != "" ]
+		then
+			FILE=$NAME
+		else
+			FILE=`expr $FILE | sed -E 's/target\/(.*)\.war$/\1/'`			
+		fi
+
+		if [ -d $CATALINA_HOME/webapps/$FILE ]
+		then
+			startTomcat
+		    echo "Moving compiled classes"
+			echo Deleting WEB-INF/classes from $CATALINA_HOME/webapps/$FILE
+			sudo rm -rf $CATALINA_HOME/webapps/$FILE/WEB-INF/classes
+
+			echo Copying classes to $CATALINA_HOME/webapps/$FILE/WEB-INF
+			# sudo cp -r target/$FILE/WEB-INF/classes $CATALINA_HOME/webapps/$FILE/WEB-INF		
+			sudo cp -r target/classes $CATALINA_HOME/webapps/$FILE/WEB-INF					
+			stopTomcat
+		else
+			echo $CATALINA_HOME/webapps/$FILE does not exist to move classes to
+		fi
+	done
+elif [ "$WEB" == "W" ] || [ "$WEB" == "w" ] 
+then
+	echo "Moving War itself"	
+	startTomcat
+	for FILE in target/*.war
+	do
+		FILE=`expr $FILE | sed -E 's/target\/(.*)\.war$/\1/'`
+	
+		echo Deleting $FILE from $CATALINA_HOME
+		sudo rm -rf $CATALINA_HOME/webapps/$FILE
+		sudo rm -f $CATALINA_HOME/webapps/$FILE.war
+	
+		echo Copying $FILE to $CATALINA_HOME/webapps	
+		sudo cp `ls target/*.war` $CATALINA_HOME/webapps
+	done
+	stopTomcat
+else 
+	echo "Moving War folder"	
+	startTomcat
+	for FILE in target/*.war
+	do
+		FILE=`expr $FILE | sed -E 's/target\/(.*)\.war$/\1/'`
+	
+		echo Deleting $FILE from $CATALINA_HOME
+		sudo rm -rf $CATALINA_HOME/webapps/$FILE
+		sudo rm -f $CATALINA_HOME/webapps/$FILE.war
+	
+		echo Copying $FILE to $CATALINA_HOME/webapps	
+		sudo cp -r target/$FILE $CATALINA_HOME/webapps
+	done
+	stopTomcat
+fi

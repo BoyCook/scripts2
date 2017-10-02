@@ -1,0 +1,6 @@
+#!/bin/bash 
+#
+# Starts Selenium Server
+# $Id sdsh BoyCook $
+
+java -jar /Users/craigcook/lib/selenium-remote-control-1.0.1/selenium-server-1.0.1/selenium-server.jar

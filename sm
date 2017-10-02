@@ -1,0 +1,87 @@
+#!/bin/bash 
+#
+# SVN diff
+# $Id sdsh BoyCook $
+
+# svn diff | grep M 
+
+ACTION=$1
+CATALINA_PID=/var/run/tomcat/tomcat.pid
+
+function start() {
+	echo -n 'Starting Tomcat...'
+		
+	if [ -f $CATALINA_PID ]; then
+		read kpid < $CATALINA_PID
+		echo "PID is $kpid"		
+	# 	if checkpid $kpid 2>&1; then
+	# 		echo "$APPNAME process already running"
+	# 		return -1
+	# 	else
+	# 		echo "lock file found but no process running for"
+	# 		echo "pid $kpid, continuing"
+	# 	fi
+	fi
+	
+	touch $CATALINA_PID
+	# chown $APPNAME:tomcat $CATALINA_PID
+	# su $APPNAME -c '/opt/tomcat/bin/startup.sh' 2>&1 > /dev/null
+	# RETVAL="$?"
+	# if [ "$RETVAL" -eq "0" ]; then
+	# 	echo_success
+	# 	touch $LOCK
+	# else
+	# 	echo_failure
+	# fi
+}
+
+function stop() {
+	echo -n "Stopping Tomcat for $APPNAME: "
+	su $APPNAME -c '/opt/tomcat/bin/shutdown.sh' 2>&1 > /dev/null
+	RETVAL="$?"
+	if [ "$RETVAL" -eq "0" ]; then
+		count="0"
+		if [ -f $CATALINA_PID ]; then
+			read kpid < $CATALINA_PID
+			until [ "`ps --pid $kpid | grep -c $kpid`" -eq "0" ] || [ "$count" -gt "$SHUTDOWN_WAIT" ]; do
+				echo -n -e "\nwaiting for process $kpid to exit"
+				sleep 1
+				let count="$count+1"
+			done
+			if [ "$count" -gt "$SHUTDOWN_WAIT" ]; then
+				echo -n -e "\nkilling process $kpid which didn't stop after $SHUTDOWN_WAIT seconds"
+				su $APPNAME -c '/opt/tomcat/bin/shutdown.sh -force' 2>&1 > /dev/null
+			fi
+			echo_success
+			if [ "$count" -gt "0" ]; then
+				echo -n -e "\n"
+			fi
+		fi
+		rm -f $LOCK $CATALINA_PID
+	else
+		echo_failure
+	fi
+}
+
+function status() {
+	RETVAL="1"
+	if [ -f $CATALINA_PID ]; then
+		read kpid < $CATALINA_PID
+		if checkpid $kpid 2>&1; then
+			echo "$APPNAME is already running ($kpid)"
+			RETVAL="0"
+		else
+			echo "lock file found but no process running for pid $kpid"
+		fi
+	else
+		pid=`pgrep -u $APPNAME java`
+		if [ -n "$pid" ]; then
+			echo "$APPNAME running ($pid) but no PID file exists"
+			RETVAL="0"
+		else
+			echo "$APPNAME is stopped"
+		fi
+	fi
+}
+
+start

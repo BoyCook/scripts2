@@ -1,0 +1,34 @@
+#!/bin/bash 
+# This creates a svn project structure
+# Options: project name
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]
+then
+    die "Usage: $0 Specify directory-name"
+fi
+
+DIRNAME=$1
+
+if ! [ -d $DIRNAME ]
+then
+    echo "Creating dir $DIRNAME"
+    mkdir $DIRNAME
+    #die "$0: Aborting $DIRNAME cannot be found"
+fi
+
+echo "$DIRNAME exists, updating SVN dir structure..."
+
+cd $DIRNAME
+
+mkdir trunk branches tags
+
+#svn add trunk branches tags
+#svn move src trunk/src
+#svn move pom.xml trunk/pom.xml
+
+echo "$DIRNAME updated"

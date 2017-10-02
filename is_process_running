@@ -1,0 +1,21 @@
+#!/bin/sh
+
+ISIT=`ps -ef  | awk '/[t]omcat/ { print $2 }' | sed -e :a -e '$!N;s/\n/ /;ta'`
+ 
+if [ "$ISIT" = "" ]
+then
+	echo 'No process'
+else
+	echo "Process is running: $ISIT"
+fi
+
+# if [ "$ISIT" != "" ]
+# then	
+# 	echo "Tomcat still running - killing process"	
+# 	echo "Waiting 3..."
+# 	sleep 1
+# 	echo "Waiting 2..."
+# 	sleep 1
+# 	echo "Waiting 1..."
+# 	kill_tomcat
+# fi

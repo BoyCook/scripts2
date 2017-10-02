@@ -1,0 +1,19 @@
+#!/bin/sh
+
+DIR=$1
+
+if [ -d $HOME/Sites/$DIR ]
+then
+	echo "$DIR exists in apache, deleting..."
+	rm -rf $HOME/Sites/$DIR
+else
+	echo "$DIR does not exist in apache - no cleanup required"
+fi
+
+if [ -d $DIR ]
+then
+	echo "$DIR exists, copying to apache..."
+	cp -R $DIR $HOME/Sites 
+else
+	echo "$DIR does not exist - not copying"
+fi

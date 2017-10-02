@@ -1,0 +1,36 @@
+#!/bin/sh
+
+APP=$1
+TOMCAT=$2
+WEBAPP=$CATALINA_HOME/webapps/$APP
+STASH=$CATALINA_HOME/webappsoff/$APP
+WAR=$CATALINA_HOME/webapps/$APP.war
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -lt 1 ] 
+then
+	die 'You must specify an app name'
+fi	
+
+if [ "$TOMCAT" == 'Y' ] || [ "$TOMCAT" == 'y' ]
+then
+	echo 'Stopping tomcat'
+	tomcat stop
+fi
+
+if [ -d $STASH ]
+then	
+	if [ -d $WEBAPP ]
+	then
+		echo "$APP exists in tomcat, deleting..."
+		rm -f $WEBAPP
+	fi
+	echo "$APP exists in stash, moving to tomcat..."	
+	mv $STASH $WEBAPP
+else
+	die "$APP doesn't exist in stash, exiting..."	
+fi

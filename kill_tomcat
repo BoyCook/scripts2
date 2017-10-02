@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Killing tomcat..."
+
+ps -ef  | awk '/[t]omcat/ { print $2 }' | sed -e :a -e '$!N;s/\n/ /;ta' | sudo  xargs kill -9

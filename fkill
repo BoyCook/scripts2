@@ -1,0 +1,17 @@
+#!/bin/sh
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]       
+then
+    die "Usage: $0 Specify an option"
+fi
+
+FILE=$1
+
+echo "Killing $FILE"
+
+ps -ef  | awk "/$FILE/ { print $2 }" | sed -e :a -e '$!N;s/\n/ /;ta' | sudo  xargs kill -9

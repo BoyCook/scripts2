@@ -1,0 +1,80 @@
+#!/bin/sh
+
+APP=$1
+DIR=$2
+TOMCAT=$CATALINA_HOME/webapps/$APP/$DIR
+SRC="src/main/webapp/$DIR"
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ ! -z $CTW_SRC ]
+then
+    echo "Setting SRC as $CTW_SRC"
+	SRC=$CTW_SRC
+fi
+
+if [ $# -lt 1 ] 
+then
+	die 'You must specify an app name'
+elif [ $# -eq 1 ] 
+then
+	if [ -d $TOMCAT ]
+	then
+		echo "$TOMCAT exists in tomcat, deleting web files ..."
+
+		for FILE in $TOMCAT*
+		do
+		    #Only delete web content, not compiled code
+			if [[ $FILE != *'WEB-INF'* ]] && [[ $FILE != *'META-INF'* ]]
+			then
+				if [ -d $FILE ]
+				then
+					rm -rf $FILE
+				else
+					rm $FILE
+				fi				
+			fi			
+		done
+
+		if [ -d $SRC ]
+		then
+			echo "$SRC exists, copying to tomcat..."
+			for FILE in $SRC*
+			do
+				if [[ $FILE != *'WEB-INF'* ]] && [[ $FILE != *'META-INF'* ]]
+				then
+					if [ -d $FILE ]
+					then
+						cp -R $FILE $TOMCAT
+					else
+						cp $FILE $TOMCAT
+					fi				
+				fi			
+			done
+		else
+			echo "$SRC does not exist - not copying"
+		fi
+
+	else
+		die "$TOMCAT does not exist in tomcat - exiting"
+	fi	
+else
+	if [ -d $TOMCAT ]
+	then
+		echo "$TOMCAT exists in tomcat, deleting..."
+		rm -rf $TOMCAT
+	else
+		echo "$TOMCAT does not exist in tomcat - no cleanup required"
+	fi
+
+	if [ -d $SRC ]
+	then
+		echo "$SRC exists, copying to tomcat..."
+		cp -R $SRC $TOMCAT
+	else
+		echo "$SRC does not exist - not copying"
+	fi
+fi

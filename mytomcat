@@ -1,0 +1,17 @@
+#!/bin/sh
+# This deals with starting and stopping tomcat on a unix based system
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]       
+then
+    die "Usage: $0 Specify an option"
+fi
+
+ACTION=$1
+
+export CATALINA_HOME=/usr/share/tomcat 
+tomcat $ACTION

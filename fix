@@ -1,0 +1,40 @@
+#!/bin/bash 
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]
+then
+    die "Usage: $0 Specify Switch"
+fi
+
+SWITCH=$1
+
+echo "Fixing $SWITCH..."
+
+case $SWITCH in
+'mate' | 'MATE')
+	rm $HOME/Library/Preferences/com.macromates.textmate.*
+  	;;
+'idea' | 'IDEA')
+	# rm -rf $HOME/Library/Preferences/com.jetbrains*
+	# rm -rf $HOME/Library/Caches/IntelliJIdea10
+ 	# rm -rf $HOME/Library/Application\ Support/IntelliJ*	
+	# cp -r $HOME/idea/IntelliJIdea11 $HOME/Library/Preferences
+	# cp $HOME/idea/com.jetbrains.intellij.plist $HOME/Library/Preferences
+	# rm -r $HOME/Library/Preferences/IntelliJIdea11
+	# rm $HOME/Library/Preferences/com.jetbrains.intellij.plist
+  ;;
+'ideastash' | 'ideastash')
+	mkdir $HOME/ideatemp	
+	# mv $HOME/Library/Preferences/IntelliJ* $HOME/ideatemp
+ 	# mv $HOME/Library/Caches/IntelliJ* $HOME/ideatemp
+ 	mv $HOME/Library/Application\ Support/IntelliJIdea90	$HOME/ideatemp/Application\ Support
+  ;;
+'flex' | 'FLEX')
+	rm -rf $HOME/Library/Preferences/com.adobe.flexbuilder.plist
+	rm -rf $HOME/Library/Caches/com.adobe.flexbuilder/Cache.db
+  ;;
+esac

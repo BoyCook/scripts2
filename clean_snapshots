@@ -1,0 +1,23 @@
+#!/bin/sh
+
+DIR=$1
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]
+then
+    die "$0 You must specify a directory to scan"
+fi
+
+if [ -d $DIR ]
+then
+	echo "$DIR exists - deleting SNAPSHOTS:"
+	cd $DIR 
+	find . -type d -name *-SNAPSHOT	
+	rm -rf `find . -type d -name *-SNAPSHOT`	
+else
+	die "$DIR does not exist"
+fi

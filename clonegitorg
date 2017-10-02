@@ -1,0 +1,9 @@
+#!/bin/sh
+# This will clone all repositories in a github org
+
+# http://developer.github.com
+# http://blog.aheritier.net/clone-all-repositories-from-a-github-organization
+
+ORG=https://api.github.com/users/BoyCook/repos
+
+curl -i $ORG

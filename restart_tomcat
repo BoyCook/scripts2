@@ -1,0 +1,5 @@
+#!/bin/sh
+
+stop_tomcat
+start_tomcat
+tail_tomcat

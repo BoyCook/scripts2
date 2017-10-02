@@ -1,0 +1,28 @@
+#!/bin/bash 
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 2 ]
+then
+    die "Usage: Specify file or directory"
+fi
+
+MODE=$1
+LOC=$2
+
+case $MODE in
+'-d' )
+	echo "Finding and deleting directories $LOC"
+	rm -rf `find . -type d -name $LOC`
+  	;;
+'-f' )
+	echo "Finding and deleting files $LOC"
+	rm -rf `find . -type f -name $LOC`
+  ;;
+* )
+	echo "Unknown option $MODE"
+  ;;
+esac

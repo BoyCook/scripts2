@@ -1,0 +1,55 @@
+# Removes all .SVN folders from a dir
+rm -rf `find . -type d -name .svn`
+
+# Capistrano deployment
+cap -S config_file=bibb-way.yml -S passwords-file=passwords-my.yml -S reuse_tmpdir jira:deploy
+
+# List all users
+cat /etc/passwd
+cat /etc/passwd | cut -d: -f1 
+cat /etc/passwd | cut -d: -f5
+
+# Make executable
+chmod 777 $SCRIPT
+chmod 755 $SCRIPT
+
+#Add user to SVN - add -c the first time you create a user
+sudo htpasswd -m /etc/apache2/dav_svn.passwd <username>
+
+#Install gem with proxy
+sudo gem install <gem> --http-proxy http://proxy.intra.bt.com:8080
+
+#Export to path in profile
+echo 'export PATH=$PATH:/opt/node/bin' >> ~/.profile
+
+#Reload path
+. ~/.profile
+
+#Disk usage
+sudo du --max-depth=1 /var
+# OSX
+sudo du -d 1 -h /Users/boycook/Downloads 
+df
+
+gunzip foo.tar.gz
+tar -zxf foo.tar
+
+#Add users/groups
+dscl
+
+Check which process is using a port
+netstat -pln
+netstat -putan
+
+# Git Submodules
+-- Add
+git add submodule {path to git repo} {target dir name}
+-- Remove
+Delete the relevant section from the .gitmodules file.
+Delete the relevant section from .git/config.
+git rm --cached path_to_submodule (no trailing slash).
+
+git clone --recursive git@github.com:BoyCook/CraigCook.git
+git submodule foreach git pull origin master
+git remote set-url origin git@github.com:BoyCook/StringBuilderJS.git
+

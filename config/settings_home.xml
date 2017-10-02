@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<settings xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<mirrors>
+		<mirror>
+			<id>cccs-nexus</id>
+			<name>CCCS Public Mirror</name>
+			<url>http://craigcook.co.uk/artefacts/content/groups/public</url>
+			<mirrorOf>*</mirrorOf>
+		</mirror>
+	</mirrors>
+	<profiles>
+		<profile>
+			<id>cccs-nexus</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<!--Enable snapshots for the built in central repo to direct -->
+			<!--all requests to nexus via the mirror -->
+			<repositories>
+				<repository>
+					<id>central</id>
+					<url>http://central</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>central</id>
+					<url>http://central</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+			<properties>
+				<downloadSources>true</downloadSources>
+				<downloadJavadocs>true</downloadJavadocs>
+			</properties>
+		</profile>
+	</profiles>
+	<servers>
+		<server>
+			<id>releases</id>
+			<username>jenkins</username>
+			<password>jenkins</password>
+		</server>
+		<server>
+			<id>snapshots</id>
+			<username>jenkins</username>
+			<password>jenkins</password>
+		</server>
+	</servers>
+</settings>

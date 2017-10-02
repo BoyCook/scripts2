@@ -1,0 +1,55 @@
+#!/bin/sh
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [  -z "$TOMCAT_DIR" ]; then
+	die 'You must export TOMCAT_DIR'
+fi
+
+if [  -z "$SRC_DIR" ]; then
+	die 'You must export SRC_DIR'
+fi
+
+if [ -d $TOMCAT_DIR ]
+then
+	echo "$TOMCAT_DIR exists in tomcat, deleting web files ..."
+
+	for FILE in $TOMCAT_DIR*
+	do
+	    #Only delete web content, not compiled code
+		if [[ $FILE != *'WEB-INF'* ]] && [[ $FILE != *'META-INF'* ]]
+		then
+			if [ -d $FILE ]
+			then
+				rm -rf $FILE
+			else
+				rm $FILE
+			fi				
+		fi			
+	done
+
+	if [ -d $SRC_DIR ]
+	then
+		echo "$SRC_DIR exists, copying to tomcat..."
+		for FILE in $SRC_DIR*
+		do
+			if [[ $FILE != *'WEB-INF'* ]] && [[ $FILE != *'META-INF'* ]]
+			then
+				if [ -d $FILE ]
+				then
+					cp -R $FILE $TOMCAT_DIR
+				else
+					cp $FILE $TOMCAT_DIR
+				fi				
+			fi			
+		done
+	else
+		echo "$SRC_DIR does not exist - not copying"
+	fi
+
+else
+	die "$TOMCAT_DIR does not exist in tomcat - exiting"
+fi

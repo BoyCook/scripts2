@@ -1,0 +1,28 @@
+#!/bin/sh
+# This creates a node project structure
+# Options: project name
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 2 ]
+then
+    die "$0 Specify dir name and module name"
+fi
+
+DIR=$1
+MODULE=$2
+echo "Creating node directories for module $MODULE in $DIR"
+mkdir $DIR
+mkdir "$DIR/lib"
+mkdir "$DIR/test"
+mkdir "$DIR/test/spec"
+touch "$DIR/lib/$MODULE.js"
+touch "$DIR/test/spec/$MODULE"Spec.js
+touch "$DIR/package.json"
+touch "$DIR/README.md"
+touch "$DIR/Makefile"
+
+#TODO populate files with templates

@@ -1,0 +1,44 @@
+#!/bin/sh
+# This deals with starting and stopping MySQL on a unix based system
+# Options: 		   start
+#                  stop
+#                  restart      
+
+function die() {
+     echo $*
+     exit 1
+}
+
+if [ $# -ne 1 ]
+then
+    die "$0 Specify action"
+fi
+
+MYSQL_HOME=/Library/StartupItems/MySQLCOM
+
+if [ ! -d $MYSQL_HOME ]
+then
+    die "Directory $MYSQL_HOME does not exist"
+fi
+
+ACTION=$1
+
+if [ "$ACTION" == "START" ] || [ "$ACTION" == "start" ] 
+then
+	echo "Starting MySQL..."
+	sudo $MYSQL_HOME/MySQLCOM start
+elif [ "$ACTION" == "STOP" ] || [ "$ACTION" == "stop" ] 	
+then
+	echo "Stopping MySQL..."
+	sudo $MYSQL_HOME/MySQLCOM stop
+elif [ "$ACTION" == "STATUS" ] || [ "$ACTION" == "status" ] 	
+then
+	echo "Showing MySQL PID..."
+	ps -ef | grep mysql
+elif [ "$ACTION" == "RESTART" ] || [ "$ACTION" == "restart" ] 	
+then
+	mysql stop
+	mysql start
+else
+	echo "Unknown action ($ACTION) - Doing nothing"
+fi
