@@ -49,13 +49,13 @@
 	<servers>
 		<server>
 			<id>releases</id>
-			<username>jenkins</username>
-			<password>jenkins</password>
+			<username></username>
+			<password></password>
 		</server>
 		<server>
 			<id>snapshots</id>
-			<username>jenkins</username>
-			<password>jenkins</password>
+			<username></username>
+			<password></password>
 		</server>
 	</servers>
 </settings>
